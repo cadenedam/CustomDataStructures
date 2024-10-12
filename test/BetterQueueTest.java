@@ -1,9 +1,6 @@
-package CommonUtilsTest;
-
-
-import CommonUtils.BetterQueue;
-import CommonUtilsTest.factories.SizeEmptyBasicAddRemoveBackTestFactory;
-import CommonUtilsTest.factories.IntTestFactory;
+import BetterQueue;
+import factories.SizeEmptyBasicAddRemoveBackTestFactory;
+import factories.IntTestFactory;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
