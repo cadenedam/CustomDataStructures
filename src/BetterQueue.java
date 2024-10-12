@@ -1,5 +1,3 @@
-package CommonUtils;
-
 import java.awt.*;
 
 
