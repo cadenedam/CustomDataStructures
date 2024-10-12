@@ -1,6 +1,3 @@
-package CommonUtils.Interfaces;
-
-
 /**
  * Interface for our new BetterHashTable object.
  * <p>
