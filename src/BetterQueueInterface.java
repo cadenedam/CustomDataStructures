@@ -1,5 +1,3 @@
-package CommonUtils;
-
 /**
  * Interface for our new BetterQueue object.
  *
