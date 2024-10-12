@@ -1,6 +1,4 @@
-package CommonUtils;
-
-import CommonUtils.Interfaces.MinHeapInterface;
+import MinHeapInterface;
 
 import java.awt.*;
 import java.util.ArrayList;
