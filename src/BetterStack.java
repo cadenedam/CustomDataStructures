@@ -1,5 +1,3 @@
-package CommonUtils;
-
 import java.util.EmptyStackException;
 
 public class BetterStack<E> implements BetterStackInterface<E> {
