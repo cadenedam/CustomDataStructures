@@ -1,8 +1,8 @@
 import BetterHashTable;
-import CommonUtilsTest.UsefulObjects.Blob;
-import CommonUtilsTest.factories.IntTestFactory;
-import CommonUtilsTest.factories.NullAndNotFoundTestFactory;
-import CommonUtilsTest.factories.SizeEmptyBasicAddRemoveBackTestFactory;
+import UsefulObjects.Blob;
+import factories.IntTestFactory;
+import factories.NullAndNotFoundTestFactory;
+import factories.SizeEmptyBasicAddRemoveBackTestFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
