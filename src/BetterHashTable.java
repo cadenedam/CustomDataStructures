@@ -1,6 +1,4 @@
-package CommonUtils;
-
-import CommonUtils.Interfaces.BetterHashTableInterface;
+import BetterHashTableInterface;
 
 import java.awt.*;
 import java.util.Objects;
