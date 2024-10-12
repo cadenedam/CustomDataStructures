@@ -1,10 +1,8 @@
-package CommonUtilsTest;
-
-import CommonUtils.MinHeap;
-import CommonUtilsTest.UsefulObjects.ComplexObject;
-import CommonUtilsTest.UsefulObjects.NewInt;
-import CommonUtilsTest.factories.IntTestFactory;
-import CommonUtilsTest.factories.SizeEmptyBasicAddRemoveBackTestFactory;
+import MinHeap;
+import UsefulObjects.ComplexObject;
+import UsefulObjects.NewInt;
+import factories.IntTestFactory;
+import factories.SizeEmptyBasicAddRemoveBackTestFactory;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
