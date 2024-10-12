@@ -1,6 +1,4 @@
-package CommonUtilsTest;
-
-import CommonUtils.BetterHashTable;
+import BetterHashTable;
 import CommonUtilsTest.UsefulObjects.Blob;
 import CommonUtilsTest.factories.IntTestFactory;
 import CommonUtilsTest.factories.NullAndNotFoundTestFactory;
