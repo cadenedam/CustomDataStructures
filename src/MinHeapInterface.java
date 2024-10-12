@@ -1,5 +1,3 @@
-package CommonUtils.Interfaces;
-
 /**
  * Interface for our new MinHeap object.
  * <p>
