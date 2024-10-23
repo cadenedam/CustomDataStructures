@@ -1,0 +1,38 @@
+package CommonUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ScapeGoatIntKey<V> extends ScapeGoatTree<Integer, V> {
+
+    public ScapeGoatIntKey() { super(); }
+
+    public ScapeGoatIntKey(Integer rootKey, V rootData) { super(rootKey, rootData); }
+
+    public List<V> getRange(int start, int end){
+        List<V> result = new ArrayList<>();
+        getRangeRecursive(root, start, end, result);
+
+        return result;
+    }
+
+    private void getRangeRecursive(Node<Integer, V> node, int start, int end, List<V> result) {
+        if (node == null) {
+            return;
+        }
+
+        if (node.key > start) {
+            getRangeRecursive(node.left, start, end, result);
+        }
+
+        if (node.key >= start && node.key <= end) {
+            result.add(node.value);
+        }
+
+        if (node.key < end) {
+            getRangeRecursive(node.right, start, end, result);
+        }
+    }
+}
+
+
