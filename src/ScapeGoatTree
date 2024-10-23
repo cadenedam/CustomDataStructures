@@ -1,0 +1,255 @@
+package CommonUtils;
+
+import CommonUtils.Interfaces.ScapeGoatTreeInterface;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ScapeGoatTree<K extends Comparable<K>, V> extends ScapeGoatTreeInterface<K, V> {
+
+    protected Node<K, V> root;
+
+    protected int nodeCount = 0;
+
+    protected int maxNodeCount = 0;
+
+    public ScapeGoatTree(){ root = null; }
+
+    public ScapeGoatTree(K rootKey, V rootData) {
+        root = new Node<K, V>(rootKey, rootData, null, null, null);
+        nodeCount++;
+    }
+
+
+
+    public void printTreeInorder(){
+        List<Node<K, V>> nodes = inorder(root);
+        for (Node<K, V> node : nodes) {
+            System.out.println(node.toString());
+        }
+    }
+
+    public void printTreePreorder(){
+        List<Node<K, V>> nodes = preorder(root);
+        for (Node<K, V> node : nodes) {
+            System.out.println(node.toString());
+        }
+    }
+
+    @Override
+    public Node<K, V> root() {
+        if (root != null) {
+            return root;
+        }
+        return null;
+    }
+
+    @Override
+    protected Node<K, V> scapeGoatNode(Node<K, V> node) {
+        while (node != null) {
+            int leftSize = subSize(node.left);
+            int rightSize = subSize(node.right);
+            int totalSize = leftSize + rightSize + 1;
+
+            if (leftSize > ALPHA_THRESHOLD * totalSize || rightSize > ALPHA_THRESHOLD * totalSize) {
+                return node;
+            }
+
+            node = node.parent;
+        }
+        return null;
+    }
+
+    @Override
+    protected Node<K, V> rebuild(Node<K, V> node) {
+        List<Node<K, V>> sortedNodes = inorder(node);
+
+        return buildBalancedTree(sortedNodes, 0, sortedNodes.size() - 1, null);
+    }
+
+    @Override
+    public void add(K key, V value) {
+        if (key == null) {
+            return;
+        }
+
+        Node<K, V> newNode = new Node<>(key, value, null, null, null);
+        Node<K, V> parent = null;
+        Node<K, V> curr = root;
+        int depth = 0;
+
+        while (curr != null) {
+            parent = curr;
+
+            if (key.compareTo(curr.key) < 0) {
+                curr = curr.left;
+            } else if (key.compareTo(curr.key) > 0) {
+                curr = curr.right;
+            } else {
+                return;
+            }
+            depth++;
+        }
+
+        newNode.parent = parent;
+        if (parent == null) {
+            root = newNode;
+        } else if (key.compareTo(parent.key) < 0) {
+            parent.left = newNode;
+        } else {
+            parent.right = newNode;
+        }
+
+        nodeCount++;
+        maxNodeCount = Math.max(maxNodeCount, nodeCount);
+
+        if (depth > Math.log(nodeCount) / Math.log(1 / ALPHA_THRESHOLD)) {
+
+            Node<K, V> scapegoat = scapeGoatNode(newNode);
+
+            if (scapegoat != null) {
+                Node<K, V> oldParent = scapegoat.parent;
+                Node<K, V> rebuiltSubtree = rebuild(scapegoat);
+
+                if (oldParent == null) {
+                    root = rebuiltSubtree;
+                } else if (scapegoat == oldParent.left) {
+                    oldParent.left = rebuiltSubtree;
+                } else {
+                    oldParent.right = rebuiltSubtree;
+                }
+                rebuiltSubtree.parent = oldParent;
+            }
+        }
+    }
+
+    @Override
+    public void remove(K key) {
+        if (key == null || root == null) {
+            return;
+        }
+
+        Node<K, V> keyCheck = findNode(key);
+        if (keyCheck == null) {
+            return;
+        }
+
+        root = delete(root, key);
+        nodeCount--;
+
+        if (nodeCount <= ALPHA_THRESHOLD * maxNodeCount) {
+            root = rebuild(root);
+            maxNodeCount = nodeCount;
+        }
+    }
+
+    @Override
+    protected Node<K, V> findNode(K key) {
+        if (key == null) {
+            return null;
+        }
+
+        Node<K, V> curr = root;
+
+        while (curr != null) {
+            if (key.compareTo(curr.key) == 0) {
+                return curr;
+            }
+
+            if (key.compareTo(curr.key) < 0) {
+                curr = curr.left;
+            } else {
+                curr = curr.right;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void clear() {
+        root = null;
+        nodeCount = 0;
+        maxNodeCount = 0;
+    }
+
+    public int size(){ return this.nodeCount; }
+
+    private Node<K, V> buildBalancedTree(List<Node<K, V>> nodes, int start, int end, Node<K, V> parent) {
+        if (start > end) {
+            return null;
+        }
+
+        int mid = (start + end + 1) / 2;
+        Node<K, V> root = nodes.get(mid);
+
+        root.parent = parent;
+
+        root.left = buildBalancedTree(nodes, start, mid - 1, root);
+        root.right = buildBalancedTree(nodes, mid + 1, end, root);
+
+        return root;
+    }
+
+    private int subSize(Node<K, V> node) {
+        if (node == null) {
+            return 0;
+        }
+        return subSize(node.left) + subSize(node.right) + 1;
+    }
+
+    private Node<K, V> delete(Node<K, V> root, K key) {
+        if (root == null) {
+            return null;
+        }
+
+        if (key.compareTo(root.key) < 0) {
+            root.left = delete(root.left, key);
+        } else if (key.compareTo(root.key) > 0) {
+            root.right = delete(root.right, key);
+        } else if (key.compareTo(root.key) == 0){
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            }
+
+            Node<K, V> succ = succNode(root);
+            root.key = succ.key;
+            root.value = succ.value;
+            root.right = delete(root.right, succ.key);
+        } else {
+            return null;
+        }
+
+        return root;
+    }
+
+
+    /**
+     * DO NOT MODIFY NOR IMPLEMENT THIS FUNCTION
+     *
+     * @param g graphics object to draw on
+     */
+    @Override
+    public void draw(Graphics g) {
+        //DO NOT MODIFY NOR IMPLEMENT THIS FUNCTION
+        if(g != null) g.getColor();
+        //todo GRAPHICS DEVELOPER:: draw the hash table how we discussed
+        //251 STUDENTS:: YOU ARE NOT THE GRAPHICS DEVELOPER!
+    }
+
+    /**
+     * DO NOT MODIFY NOR IMPLEMENT THIS FUNCTION
+     *
+     * @param g graphics object to draw on
+     */
+    @Override
+    public void visualize(Graphics g) {
+        //DO NOT MODIFY NOR IMPLEMENT THIS FUNCTION
+        if(g != null) g.getColor();
+        //todo GRAPHICS DEVELOPER:: visualization is to be time-based -- how we discussed
+        //251 STUDENTS:: YOU ARE NOT THE GRAPHICS DEVELOPER!
+    }
+}
+
