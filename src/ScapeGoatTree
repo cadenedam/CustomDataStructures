@@ -1,6 +1,4 @@
-package CommonUtils;
-
-import CommonUtils.Interfaces.ScapeGoatTreeInterface;
+import ScapeGoatTreeInterface;
 
 import java.awt.*;
 import java.util.ArrayList;
